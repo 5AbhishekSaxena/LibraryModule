@@ -1,7 +1,11 @@
-package in.abhishek.LibraryModule;
+package in.abhishek.LibraryModule.Utils;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
+
+/**
+ * Created by Abhishek Saxena on 01-09-2018.
+ */
 
 public class UtilFunctions {
 

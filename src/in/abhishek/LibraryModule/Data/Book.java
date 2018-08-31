@@ -1,6 +1,8 @@
 package in.abhishek.LibraryModule.Data;
 
-import org.jetbrains.annotations.Nullable;
+/**
+ * Created by Abhishek Saxena on 01-09-2018.
+ */
 
 public class Book extends Information {
 
@@ -11,13 +13,8 @@ public class Book extends Information {
     private int numberOfPages;
     private String issuedBy;
 
-    public Book() {
-
-    }
-
     public Book(String name, String id, String author, String publishedBy, String publishedOn, int numberOfPages, String issuedBy) {
-        this.name = name;
-        this._ID = id;
+        super(name, id);
         this.author = author;
         this.publishedBy = publishedBy;
         this.publishedOn = publishedOn;

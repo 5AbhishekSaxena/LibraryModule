@@ -1,11 +1,13 @@
 package in.abhishek.LibraryModule.Data;
 
+import in.abhishek.LibraryModule.Utils.AppConstants;
 import in.abhishek.LibraryModule.Exceptions.LibraryException;
-import in.abhishek.LibraryModule.MainScreen;
-import in.abhishek.LibraryModule.UtilFunctions;
+import in.abhishek.LibraryModule.Activity.MainScreen;
+import in.abhishek.LibraryModule.Utils.UtilFunctions;
 
-import java.util.ArrayList;
-
+/**
+ * Created by Abhishek Saxena on 01-09-2018.
+ */
 
 public class Borrower extends Information {
 
@@ -15,8 +17,7 @@ public class Borrower extends Information {
     private Book bookDetails;
 
     public Borrower(String name, String id, String password, boolean hasIssued) {
-        this.name = name;
-        this._ID = id;
+        super(name, id);
         this.password = UtilFunctions.encrypt(password);
         this.hasIssued = hasIssued;
         bookId = null;
@@ -26,7 +27,7 @@ public class Borrower extends Information {
         this(name, id, password, hasIssued);
         if (hasIssued) {
             this.bookId = bookId;
-            for (Book b : MainScreen.getBooks()) {
+            for (Book b : MainScreen.getBook()) {
                 if (b.getId().equals(bookId)) {
                     bookDetails = b;
                     System.out.println(bookDetails.details());
@@ -47,13 +48,14 @@ public class Borrower extends Information {
         return hasIssued;
     }
 
-    public void setHasIssued(boolean hasIssued) {
+    public void updateHasIssued(boolean hasIssued) {
         this.hasIssued = hasIssued;
     }
 
     public String getBookId() {
         return bookId;
     }
+
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
@@ -67,30 +69,21 @@ public class Borrower extends Information {
         this.bookDetails = bookDetails;
     }
 
-    public boolean issueBook(String bookId) {
-        ArrayList<Book> books = MainScreen.getBooks();
-        //details = new Book();
-        try {
-            if (!hasIssued) {
-                this.bookId = bookId;
-                bookDetails = null;
-                for (Book book : books) {
-                    if (bookId.equals(book.getId())) {
-                        bookDetails = book;
-                        book.setIssuedBy(_ID);
-                        hasIssued = true;
-                        break;
-                    }
-                }
-                if (bookDetails == null)
-                    throw new LibraryException("Book Not Found");
-                return true;
-            }else
-                throw new LibraryException("User has already issued a book from the Library");
-        } catch (LibraryException e) {
-            System.out.println(e.getMessage());
+    public boolean issueBook(String bookId) throws LibraryException {
+        bookDetails = (Book) MainScreen.find(bookId, AppConstants.BOOK);
+        if (bookDetails == null)
+            throw new LibraryException("Book Not Found");
+        if (bookDetails.getIssuedBy() != null)
+            throw new LibraryException("Book is already Issued.");
+
+        if (hasIssued)
+            throw new LibraryException("User has already issued a book from the Library");
+        else {
+            this.bookId = bookId;
+            bookDetails.setIssuedBy(_ID);
+            hasIssued = true;
+            return true;
         }
-        return false;
     }
 
     @Override
