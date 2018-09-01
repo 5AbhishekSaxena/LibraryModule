@@ -11,8 +11,9 @@ import in.abhishek.LibraryModule.Exceptions.LibraryException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static in.abhishek.LibraryModule.Utils.AppConstants.BORROWER;
 import static in.abhishek.LibraryModule.Utils.AppConstants.BOOK;
+import static in.abhishek.LibraryModule.Utils.AppConstants.BORROWER;
+import static in.abhishek.LibraryModule.Utils.UtilFunctions.find;
 
 /**
  * Created by Abhishek Saxena on 01-09-2018.
@@ -42,7 +43,7 @@ public class MainScreen {
     public static void main(String[] args) {
         scanner = new Scanner(System.in);
         addBooks();
-        addUser();
+        //addUser();
         setUpMainMenu();
     }
 
@@ -101,6 +102,8 @@ public class MainScreen {
                         System.out.println("Book returned successfully.");
                     }
                     break;
+                case 5:
+                    System.exit(0);
                 default:
                     System.out.println("Invalid Option Selected.");
                     break;
@@ -116,7 +119,7 @@ public class MainScreen {
         currentBook = null;
     }
 
-    private static void addUser() {
+    public static void addUser() {
         /*scanner = new Scanner(System.in);
         System.out.print("Enter Name: ");
         name = scanner.nextLine();
@@ -137,7 +140,7 @@ public class MainScreen {
 
     }
 
-    private static void addBooks() {
+    public static void addBooks() {
         if (books == null)
             books = new ArrayList<>();
 
@@ -153,6 +156,10 @@ public class MainScreen {
 
     public static ArrayList<Book> getBook() {
         return books;
+    }
+
+    public static ArrayList<Borrower> getBorrowers(){
+        return borrowers;
     }
 
     private static boolean getDetails(String id, int type) throws LibraryException {
@@ -184,23 +191,4 @@ public class MainScreen {
         return false;
     }
 
-    public static Object find(String id, int type) throws LibraryException {
-        if (type == BOOK) {
-            for (Book b : books) {
-                if (b.getId().equals(id)) {
-                    return b;
-                }
-            }
-            throw new LibraryException("Invalid book ID.");
-
-        } else if (type == BORROWER) {
-            for (Borrower b : borrowers) {
-                if (b.getId().equals(id)) {
-                    return b;
-                }
-            }
-            throw new LibraryException("Invalid borrower ID.");
-        }
-        return null;
-    }
 }

@@ -9,12 +9,12 @@ abstract class Information {
     String _ID;
     String name;
 
-    public Information(String name, String id){
+    Information(String name, String id){
         this.name = name;
         _ID = id;
     }
 
-    public Information(){
+    Information(){
 
     }
 
