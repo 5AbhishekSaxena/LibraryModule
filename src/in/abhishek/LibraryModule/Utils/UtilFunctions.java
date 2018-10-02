@@ -34,7 +34,7 @@ public class UtilFunctions {
         return passwordBuilder.toString();
     }
 
-    public static Object find(String id, int type) throws LibraryException {
+    /*public static Object find(String id, int type) throws LibraryException {
         if (type == BOOK) {
             ArrayList<Book> books = MainScreen.getBook();
             if (books == null) {
@@ -64,5 +64,13 @@ public class UtilFunctions {
             throw new LibraryException("Invalid borrower ID.");
         }
         return null;
+    }*/
+
+    public static void println(String str) {
+        System.out.println(str);
+    }
+
+    public static void updateUser(Borrower borrower){
+
     }
 }

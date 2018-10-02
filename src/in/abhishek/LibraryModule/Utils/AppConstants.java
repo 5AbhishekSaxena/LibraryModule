@@ -8,5 +8,8 @@ public class AppConstants {
     public static final int BOOK = 1;
     public static final int BORROWER = 2;
 
+    public static final int  RETURN = 3;
+    public static final int  ISSUE = 4;
+
 
 }

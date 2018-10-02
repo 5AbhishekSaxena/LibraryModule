@@ -25,10 +25,10 @@ public class Book extends Information {
             this.issuedBy = null;
     }
 
-   /* public Book getBookDetails(String id){
+   public Book getBookDetails(String id){
         return new Book("book_name", id, "book_author",
                 "book_publishedby", "book_publishedby", 101, issuedBy);
-    }*/
+    }
 /*
     public Book getBookDetails(String id) {
         return new Book(name, id, author,
@@ -81,7 +81,7 @@ public class Book extends Information {
     public String details() {
         return "Book Details\nBook Name: " + name + "\nBook ID: " + _ID + "\nAuthor: " + author +
                 "\nPublished By: " + publishedBy + "\nPublushed On: " + publishedOn + "\nNumber of Pages: " + numberOfPages +
-                "\nIssued By: " + issuedBy;
+                "\nIssued By: " + (issuedBy.equals("-1") ? "None" : issuedBy + "(User ID)");
     }
 
     @Override

@@ -6,14 +6,12 @@ package in.abhishek.LibraryModule.Activity;
 
 import in.abhishek.LibraryModule.Data.Book;
 import in.abhishek.LibraryModule.Data.Borrower;
-import in.abhishek.LibraryModule.Exceptions.LibraryException;
+import in.abhishek.LibraryModule.Data.SQLiteJDBCDriverConnection;
+import in.abhishek.LibraryModule.Utils.AppConstants;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import static in.abhishek.LibraryModule.Utils.AppConstants.BOOK;
-import static in.abhishek.LibraryModule.Utils.AppConstants.BORROWER;
-import static in.abhishek.LibraryModule.Utils.UtilFunctions.find;
+import static in.abhishek.LibraryModule.Utils.UtilFunctions.println;
 
 /**
  * Created by Abhishek Saxena on 01-09-2018.
@@ -22,173 +20,184 @@ import static in.abhishek.LibraryModule.Utils.UtilFunctions.find;
 public class MainScreen {
 
     /**
-     *  TODO: Make Login Module.
-     *  TODO: Make Sign up Module.
-     *  TODO: Make Staff architecture - Regular Staff and Admin.
+     * TODO: Make Staff architecture - Regular Staff and Admin.
      */
 
-    /*private static String name;
-    private static String password;
-    private static String _ID;*/
     private static String bookId;
     private static String borrowId;
 
     private static Borrower currentBorrower;
-
-    private static ArrayList<Book> books;
-    private static ArrayList<Borrower> borrowers;
-    private static Scanner scanner;
     private static Book currentBook;
 
-    public static void main(String[] args) {
-        scanner = new Scanner(System.in);
-        addBooks();
-        //addUser();
-        setUpMainMenu();
+    private static Scanner scanner;
+
+    private MainScreen() {
+        Borrower userDetails = LoginModule.getUserDetails();
+        Book bookDetails = LoginModule.getBookDetails();
+        if (userDetails != null) {
+            String name = userDetails.getName();
+            String id = userDetails.getId();
+            String password = userDetails.getPassword();
+            boolean hasIssued = userDetails.isHasIssued();
+            String bookId = userDetails.getBookId();
+            currentBorrower = new Borrower(name, id, password, hasIssued, bookId);
+            if (!bookId.equals("-1")) {
+                if (bookDetails != null) {
+                    currentBook = bookDetails;
+                    currentBorrower.setBookDetails(currentBook);
+                }
+            }
+            if (bookDetails != null)
+                currentBook = bookDetails;
+        } else {
+            println("Invalid User login.");
+            logout();
+        }
     }
 
-    private static void setUpMainMenu() {
-        try {
-            System.out.println("Main Menu");
-            System.out.println("1. Issue Book");
-            System.out.println("2. Get details of a book.");
-            System.out.println("3. Get details of a borrower.");
-            System.out.println("4. Return Book");
-            System.out.println("5. Close Main Menu");
-            System.out.println("Enter Choice: ");
-            int x = scanner.nextInt();
-            switch (x) {
-                case 1:
-                    resetRef();
-                    System.out.println("Please enter borrow's ID: ");
-                    borrowId = scanner.next();
-                    currentBorrower = (Borrower) find(borrowId, BORROWER);
-                    System.out.println("Please enter book ID:");
-                    bookId = scanner.next();
-                    currentBook = (Book) find(bookId, BOOK);
+    public static void main(String[] args) {
+        MainScreen mainScreen = new MainScreen();
+        scanner = new Scanner(System.in);
+        mainScreen.setUpMainMenu();
+    }
 
-                    if (currentBorrower != null) {
-                        if (currentBook != null) {
-                            if (currentBorrower.issueBook(bookId))
-                                System.out.println("Book Issued Successfully");
-                        }
-                    }
-                    break;
-                case 2:
-                    resetRef();
-                    System.out.println("Enter Book ID: ");
-                    bookId = scanner.next();
-                    if (!getDetails(bookId, BOOK))
-                        System.out.println("Book not found");
-                    break;
-                case 3:
-                    resetRef();
-                    System.out.println("Enter Borrower ID: ");
-                    borrowId = scanner.next();
-                    if (!getDetails(borrowId, BORROWER))
-                        System.out.println("Borrow not found");
-                    break;
-                case 4:
-                    resetRef();
-                    System.out.println("Enter Book ID: ");
-                    bookId = scanner.next();
-                    currentBook = (Book) find(bookId, BOOK);
-                    System.out.println("Enter Borrow ID: ");
-                    borrowId = scanner.next();
-                    currentBorrower = (Borrower) find(borrowId, BORROWER);
-                    if (!returnBook(currentBorrower, currentBook)) {
-                        throw new LibraryException("Book not returned");
-                    } else {
-                        System.out.println("Book returned successfully.");
-                    }
-                    break;
-                case 5:
-                    System.exit(0);
-                default:
-                    System.out.println("Invalid Option Selected.");
-                    break;
-            }
-        } catch (LibraryException e) {
-            System.out.println(e.getMessage());
+    private void setUpMainMenu() {
+        println("Main Menu");
+        println("1. Issue Book");
+        println("2. Get details of a book.");
+        println("3. Get details of a borrower.");
+        println("4. Add Book");
+        println("5. Return Book");
+        println("99. Log out");
+        println("Enter Choice: ");
+        int x = scanner.nextInt();
+        switch (x) {
+            case 1:
+                println("Please enter book ID:");
+                bookId = scanner.next();
+
+                if (currentBorrower != null) {
+                    if (updateReturnIssueBookStatus(currentBorrower.getId(), bookId, AppConstants.ISSUE))
+                        println("Book Issued Successfully");
+                }
+                break;
+            case 2:
+                println("Enter Book ID: ");
+                bookId = scanner.next();
+                currentBook = (Book) new SQLiteJDBCDriverConnection().getRecords(bookId, AppConstants.BOOK);
+                if (currentBook != null) {
+                    println("Book Found");
+                    println(currentBook.details());
+                } else
+                    println("Book not found");
+                resetBookRef();
+                break;
+            case 3:
+                if (currentBorrower != null) {
+                    println(currentBorrower.details());
+                }
+                break;
+            case 4:
+                resetBookRef();
+                addBook();
+                break;
+            case 5:
+                if (currentBorrower.isHasIssued()) {
+                    if (updateReturnIssueBookStatus(currentBorrower.getId(), currentBorrower.getBookId(), AppConstants.RETURN))
+                        println("Book returned successfully.");
+                    else
+                        println("Book not returned.");
+                } else
+                    println("User haven't issued any book.");
+                break;
+            case 10:
+                println(currentBorrower.getBookDetails().details());
+                break;
+            case 99:
+                logout();
+            default:
+                println("Invalid Option Selected.");
+                break;
         }
         setUpMainMenu();
     }
 
-    private static void resetRef() {
-        currentBorrower = null;
+    private void resetBookRef() {
         currentBook = null;
     }
 
-    public static void addUser() {
-        /*scanner = new Scanner(System.in);
-        System.out.print("Enter Name: ");
-        name = scanner.nextLine();
-        System.out.print("\nEnter Password: ");
-        password = scanner.nextLine();
-        System.out.print("\nEnter ID: ");
-        _ID = scanner.nextLine();
+    private void resetBorrowerRef() {
+        currentBorrower = null;
+    }
+    private void resetRef() {
+        resetBookRef();
+        resetBorrowerRef();
+    }
 
-        currentBorrower = new Borrower(name, _ID, password, false);*/
-        if (borrowers == null)
-            borrowers = new ArrayList<>();
+    private void addBook() {
+        String id, name, author, publishedBy, publishedOn, numberOfpages;
 
-        borrowers.add(new Borrower("b1", "1", "123", false));
-        borrowers.add(new Borrower("b2", "2", "123", false));
-        borrowers.add(new Borrower("b3", "3", "123", false));
-        borrowers.add(new Borrower("b4", "4", "123", false));
-        borrowers.add(new Borrower("b5", "5", "123", false));
+        println("Enter Book Id: ");
+        id = scanner.next();
+        println("Enter Book name: ");
+        name = scanner.next();
+        println("Enter Book author: ");
+        author = scanner.next();
+        println("Enter Book published by: ");
+        publishedBy = scanner.next();
+        println("Enter Book published on: ");
+        publishedOn = scanner.next();
+        println("Enter Book number of pages: ");
+        numberOfpages = scanner.next();
+
+        /*if (new SQLiteJDBCDriverConnection().insertBook(id, name, author, publishedBy, publishedOn, numberOfpages, "-1")) {
+            println("Book Added successfully.");
+        } else {
+            println("Book NOT added.");
+        }*/
+        if (new SQLiteJDBCDriverConnection().insertRecord(AppConstants.BOOK, id, name, author, publishedBy, publishedOn, numberOfpages, "-1")) {
+            println("Book Added successfully.");
+        } else {
+            println("Book NOT added.");
+        }
 
     }
 
-    public static void addBooks() {
-        if (books == null)
-            books = new ArrayList<>();
-
-        books.add(new Book("Book1", "101", "Author1", "Publisher1",
-                "123", 101, null));
-        books.add(new Book("Book2", "102", "Author2", "Publisher2",
-                "123", 101, null));
-        books.add(new Book("Book3", "103", "Author3", "Publisher3",
-                "123", 101, null));
-        books.add(new Book("Book4", "104", "Author4", "Publisher4",
-                "123", 101, null));
+    private boolean updateReturnIssueBookStatus(String userId, String bookId, int type) {
+        if (checkRecord(userId, AppConstants.BORROWER)) {
+            if (checkRecord(bookId, AppConstants.BOOK)) {
+                if (new SQLiteJDBCDriverConnection().updateReturnIssueStatusDB(currentBorrower.getId(), bookId, type)) {
+                    currentBorrower.setBookId(bookId);
+                    currentBorrower.updateHasIssued(type == AppConstants.ISSUE);
+                    if (type == AppConstants.ISSUE)
+                        currentBorrower.setBookDetails((Book) new SQLiteJDBCDriverConnection().getRecords(bookId, AppConstants.BOOK));
+                    else
+                        currentBorrower.setBookDetails(null);
+                    //UtilFunctions.updateUser(currentBorrower);
+                    println("User Details updated.");
+                    return true;
+                }
+            } else
+                println("Invalid Book Id.");
+        } else
+            println("Invalid User Id.");
+        return false;
     }
 
-    public static ArrayList<Book> getBook() {
-        return books;
-    }
-
-    public static ArrayList<Borrower> getBorrowers(){
-        return borrowers;
-    }
-
-    private static boolean getDetails(String id, int type) throws LibraryException {
-        if (type == BOOK) {
-            currentBook = (Book) find(id, type);
-            if (currentBook != null) {
-                System.out.println(currentBook.details());
-                return true;
-            }
-        } else if (type == BORROWER) {
-            currentBorrower = (Borrower) find(id, type);
-            if (currentBorrower != null) {
-                System.out.println(currentBorrower.details());
-                return true;
-            }
+    private boolean checkRecord(String id, int type) {
+        if (type == AppConstants.BOOK) {
+            Book book = (Book) new SQLiteJDBCDriverConnection().getRecords(id, type);
+            return book != null;
+        } else if (type == AppConstants.BORROWER) {
+            Borrower borrower = (Borrower) new SQLiteJDBCDriverConnection().getRecords(id, type);
+            return borrower != null;
         }
         return false;
     }
 
-    private static boolean returnBook(Borrower borrow, Book book) {
-        if (book.getIssuedBy() != null) {
-            if (borrow.isHasIssued()) {
-                borrow.updateHasIssued(false);
-                borrow.setBookId(null);
-                book.setIssuedBy(null);
-                return true;
-            }
-        }
-        return false;
+    private void logout(){
+        println("Logging out....");
+        resetRef();
+        LoginModule.main(null);
     }
-
 }
