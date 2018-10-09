@@ -14,18 +14,6 @@ abstract class Information {
         _ID = id;
     }
 
-    Information(){
-
-    }
-
-    protected void setID(String id){
-        _ID = id;
-    }
-
-    protected void setName(String name){
-        this.name = name;
-    }
-
     public String getId(){
         return _ID;
     }

@@ -1,11 +1,5 @@
 package in.abhishek.LibraryModule.Data;
 
-import in.abhishek.LibraryModule.Utils.AppConstants;
-import in.abhishek.LibraryModule.Exceptions.LibraryException;
-import in.abhishek.LibraryModule.Activity.MainScreen;
-
-import static in.abhishek.LibraryModule.Utils.UtilFunctions.encrypt;
-
 /**
  * Created by Abhishek Saxena on 01-09-2018.
  */
@@ -23,26 +17,8 @@ public class Borrower extends Information {
         this.hasIssued = hasIssued;
         this.bookId = bookId;
     }
-
-    /*public Borrower(String name, String id, String password, boolean hasIssued, String bookId) {
-        this(name, id, password, hasIssued);
-        if (hasIssued) {
-            this.bookId = bookId;
-            for (Book b : MainScreen.getBook()) {
-                if (b.getId().equals(bookId)) {
-                    bookDetails = b;
-                    System.out.println(bookDetails.details());
-                }
-            }
-        }
-    }*/
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isHasIssued() {

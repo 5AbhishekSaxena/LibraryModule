@@ -10,6 +10,4 @@ public class AppConstants {
 
     public static final int  RETURN = 3;
     public static final int  ISSUE = 4;
-
-
 }

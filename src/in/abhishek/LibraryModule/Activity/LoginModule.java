@@ -15,7 +15,6 @@ import static in.abhishek.LibraryModule.Utils.UtilFunctions.println;
  */
 
 public class LoginModule {
-
     private static String _ID;
     private static String password;
     private static Borrower userDetails;
@@ -44,7 +43,7 @@ public class LoginModule {
             case 3:
                 System.exit(0);
             case 5:
-                System.out.println(new SQLiteJDBCDriverConnection().getRecords("101", AppConstants.BOOK ));
+                System.out.println(new SQLiteJDBCDriverConnection().getRecords("101", AppConstants.BOOK));
                 System.out.println("Book using issuedby: " + new SQLiteJDBCDriverConnection().getBookUsingUserId("2"));
                 break;
             default:
@@ -96,32 +95,30 @@ public class LoginModule {
         _ID = scanner.next().trim();
         println("Enter Password: ");
         password = UtilFunctions.encrypt(scanner.next());
-        if (checkCredentials(_ID, password)) {
-                MainScreen.main(null);
-            } else
-                println("Incorrect Login Credentials");
-            //SessionManager.login();
+        if (checkCredentials(_ID, password)) MainScreen.main(null);
+        else
+            println("Incorrect Login Credentials");
     }
 
     private boolean checkCredentials(String id, String password) {
 
         userDetails = (Borrower) new SQLiteJDBCDriverConnection().getRecords(id, AppConstants.BORROWER);
         if (userDetails != null) {
-        //System.out.println("User: \n" + userDetails.details());
-            String pass =  userDetails.getPassword();
-            if(pass.equals(password)) {
+            String pass = userDetails.getPassword();
+            if (pass.equals(password)) {
                 bookDetails = new SQLiteJDBCDriverConnection().getBookUsingUserId(id);
                 return true;
             }
-        }else
+        } else
             System.out.println("userDetails: null");
         return false;
     }
 
-    public static Borrower getUserDetails() {
+    static Borrower getUserDetails() {
         return userDetails;
     }
-    public static Book getBookDetails(){
+
+    static Book getBookDetails() {
         return bookDetails;
     }
 }

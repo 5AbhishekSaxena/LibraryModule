@@ -13,7 +13,7 @@ public class Book extends Information {
     private int numberOfPages;
     private String issuedBy;
 
-    public Book(String name, String id, String author, String publishedBy, String publishedOn, int numberOfPages, String issuedBy) {
+    Book(String name, String id, String author, String publishedBy, String publishedOn, int numberOfPages, String issuedBy) {
         super(name, id);
         this.author = author;
         this.publishedBy = publishedBy;
@@ -23,58 +23,6 @@ public class Book extends Information {
             this.issuedBy = issuedBy;
         else
             this.issuedBy = null;
-    }
-
-   public Book getBookDetails(String id){
-        return new Book("book_name", id, "book_author",
-                "book_publishedby", "book_publishedby", 101, issuedBy);
-    }
-/*
-    public Book getBookDetails(String id) {
-        return new Book(name, id, author,
-                publishedOn, publishedBy, numberOfPages, issuedBy);
-    }*/
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getPublishedBy() {
-        return publishedBy;
-    }
-
-    public void setPublishedBy(String publishedBy) {
-        this.publishedBy = publishedBy;
-    }
-
-    public String getPublishedOn() {
-        return publishedOn;
-    }
-
-    public void setPublishedOn(String publishedOn) {
-        this.publishedOn = publishedOn;
-    }
-
-    public int getNumberOfPages() {
-        return numberOfPages;
-    }
-
-    public void setNumberOfPages(int numberOfPages) {
-
-        this.numberOfPages = numberOfPages;
-    }
-
-
-    public String getIssuedBy() {
-        return issuedBy;
-    }
-
-    public void setIssuedBy(String issuedBy) {
-        this.issuedBy = issuedBy;
     }
 
     @Override

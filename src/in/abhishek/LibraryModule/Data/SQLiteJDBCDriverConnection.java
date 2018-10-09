@@ -1,7 +1,6 @@
 package in.abhishek.LibraryModule.Data;
 
 import in.abhishek.LibraryModule.Utils.AppConstants;
-import in.abhishek.LibraryModule.Utils.UtilFunctions;
 import static in.abhishek.LibraryModule.Utils.UtilFunctions.println;
 
 import java.sql.*;
@@ -137,8 +136,6 @@ public class SQLiteJDBCDriverConnection {
             String author = resultSet.getString("author");
             String publishedBy = resultSet.getString("publishedBy");
             String publishedOn = resultSet.getString("publishedOn");
-            //int numberOfPages = Integer.parseInt(resultSet.getString("numberOfPages"));
-            String numberOfPages = resultSet.getString("numberOfPages");
             String issuedBy = resultSet.getString("issuedby");
             return new Book(name, id, author, publishedBy, publishedOn, 123, issuedBy);
         } catch (SQLException e) {
