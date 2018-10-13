@@ -1,24 +1,21 @@
 package in.abhishek.LibraryModule;
 
-import in.abhishek.LibraryModule.Utils.UtilFunctions;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+import static in.abhishek.LibraryModule.Utils.UtilFunctions.println;
 
 /**
  * Created by Abhishek Saxena on 01-09-2018.
  */
 
 public class testingClass {
-
-
-    private static int x;
-    private static int y;
-
-    public static void main(String[] args) {
-        StringBuilder param = new StringBuilder();
-        for (int i = 0; i < 7; i++){
-            param.append("?");
-            if(i < 6)
-                param.append(", ");
+    public static void main(final String[] args) {
+        try {
+            int num = new Scanner(System.in).nextInt();
+            println("num: " + num);
+        }catch(InputMismatchException e){
+            println("Please enter a number.");
         }
-        UtilFunctions.println(param.toString());
     }
 }

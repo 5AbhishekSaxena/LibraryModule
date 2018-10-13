@@ -1,5 +1,6 @@
 package in.abhishek.LibraryModule.Utils;
 
+import java.io.Console;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +24,17 @@ public class UtilFunctions {
             e.printStackTrace();
         }
         return passwordBuilder.toString();
+    }
+
+    public void passwordExample() {
+        Console console = System.console();
+        if (console == null) {
+            System.out.println("Couldn't get Console instance");
+            System.exit(0);
+        }
+        char passwordArray[] = console.readPassword("Enter your secret password: ");
+        console.printf("Password entered was: %s%n", new String(passwordArray));
+
     }
 
     public static void println(String str) {

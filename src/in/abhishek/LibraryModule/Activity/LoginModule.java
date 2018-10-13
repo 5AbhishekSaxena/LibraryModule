@@ -1,9 +1,10 @@
 package in.abhishek.LibraryModule.Activity;
 
-import in.abhishek.LibraryModule.Data.Book;
 import in.abhishek.LibraryModule.Data.Borrower;
 import in.abhishek.LibraryModule.Data.SQLiteJDBCDriverConnection;
-import in.abhishek.LibraryModule.Utils.AppConstants;
+import static in.abhishek.LibraryModule.Utils.AppConstants.BORROWER;
+import static in.abhishek.LibraryModule.Utils.AppConstants.BOOK;
+
 import in.abhishek.LibraryModule.Utils.UtilFunctions;
 
 import java.util.*;
@@ -18,7 +19,6 @@ public class LoginModule {
     private static String _ID;
     private static String password;
     private static Borrower userDetails;
-    private static Book bookDetails;
 
     public static void main(String[] args) {
         LoginModule module = new LoginModule();
@@ -43,8 +43,8 @@ public class LoginModule {
             case 3:
                 System.exit(0);
             case 5:
-                System.out.println(new SQLiteJDBCDriverConnection().getRecords("101", AppConstants.BOOK));
-                System.out.println("Book using issuedby: " + new SQLiteJDBCDriverConnection().getBookUsingUserId("2"));
+                System.out.println(new SQLiteJDBCDriverConnection().getRecords("101", BOOK));
+                System.out.println("Book using issued by: " + new SQLiteJDBCDriverConnection().getBookUsingUserId("2"));
                 break;
             default:
                 println("Invalid option selected");
@@ -79,14 +79,16 @@ public class LoginModule {
     }
 
     private boolean signUp(Scanner scanner) {
+        int lastID = Integer.parseInt(new SQLiteJDBCDriverConnection().getLastID(BORROWER));
+        scanner.nextLine();
         println("SignUp Menu");
+        println("Assigned Login ID: " + ++lastID);
+        _ID = String.valueOf(lastID);
         println("Enter Name: ");
-        String name = scanner.next().trim();
-        println("Enter Login ID: ");
-        _ID = scanner.next().trim();
+        String name = scanner.nextLine().trim();
         println("Enter Password: ");
-        password = UtilFunctions.encrypt(scanner.next());
-        return new SQLiteJDBCDriverConnection().insertRecord(AppConstants.BORROWER, _ID, name, password, "false", "-1");
+        password = UtilFunctions.encrypt(scanner.nextLine());
+        return new SQLiteJDBCDriverConnection().insertRecord(BORROWER, _ID, name, password, "false", null);
     }
 
     private void loginMenu(Scanner scanner) {
@@ -102,23 +104,15 @@ public class LoginModule {
 
     private boolean checkCredentials(String id, String password) {
 
-        userDetails = (Borrower) new SQLiteJDBCDriverConnection().getRecords(id, AppConstants.BORROWER);
+        userDetails = (Borrower) new SQLiteJDBCDriverConnection().getRecords(id, BORROWER);
         if (userDetails != null) {
             String pass = userDetails.getPassword();
-            if (pass.equals(password)) {
-                bookDetails = new SQLiteJDBCDriverConnection().getBookUsingUserId(id);
-                return true;
-            }
-        } else
-            System.out.println("userDetails: null");
+            return pass.equals(password);
+        }
         return false;
     }
 
     static Borrower getUserDetails() {
         return userDetails;
-    }
-
-    static Book getBookDetails() {
-        return bookDetails;
     }
 }

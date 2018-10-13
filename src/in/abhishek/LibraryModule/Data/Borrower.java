@@ -10,12 +10,14 @@ public class Borrower extends Information {
     private boolean hasIssued;
     private String bookId;
     private Book bookDetails;
+    private boolean isAdmin;
 
     public Borrower(String name, String id, String password, boolean hasIssued, String bookId) {
         super(name, id);
         this.password = password;
         this.hasIssued = hasIssued;
         this.bookId = bookId;
+        this.isAdmin = false;
     }
     public String getPassword() {
         return password;
@@ -35,6 +37,14 @@ public class Borrower extends Information {
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public Book getBookDetails() {

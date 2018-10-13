@@ -10,10 +10,10 @@ public class Book extends Information {
     private String author;
     private String publishedBy;
     private String publishedOn;
-    private int numberOfPages;
+    private String numberOfPages;
     private String issuedBy;
 
-    Book(String name, String id, String author, String publishedBy, String publishedOn, int numberOfPages, String issuedBy) {
+    Book(String name, String id, String author, String publishedBy, String publishedOn, String numberOfPages, String issuedBy) {
         super(name, id);
         this.author = author;
         this.publishedBy = publishedBy;
@@ -25,15 +25,19 @@ public class Book extends Information {
             this.issuedBy = null;
     }
 
+    public String getIssuedBy() {
+        return issuedBy;
+    }
+
     @Override
     public String details() {
         return "Book Details\nBook Name: " + name + "\nBook ID: " + _ID + "\nAuthor: " + author +
                 "\nPublished By: " + publishedBy + "\nPublushed On: " + publishedOn + "\nNumber of Pages: " + numberOfPages +
-                "\nIssued By: " + (issuedBy.equals("-1") ? "None" : issuedBy + "(User ID)");
+                "\nIssued By: " + (issuedBy == null ? "None" : issuedBy + "(User ID)");
     }
 
     @Override
     public String toString() {
-        return "Book Name: " + name;
+        return "Book Name: " + name + " (" + _ID + ")";
     }
 }
