@@ -14,6 +14,13 @@ This is a project primarily focusing on code optimisation, efficiently, architec
 - For contributions in this repository, please read `CONTRIBUTING.md` first. (Please pull the changes from this repo if you have already forked the repository and are facing conflicts)
 - If you like the repository, please star it.
 
+### Integrated Development Environment(IDE) Setup
+In order to compile the project easily you'll need an IDE. I used Intellij IDEA Community edition.
+- Download the software from the official website ([Download Link](https://www.jetbrains.com/idea/download/#section=windows)).
+- Install the software.
+- Download this project zip and extract it to a location.
+- Open Intellij IDEA and import the project in the software.(File>Open>Select the folder containing the project). 
+
 ### Learning Resources
 
 [Creating a pull request](https://services.github.com/on-demand/intro-to-github/create-pull-request)
